@@ -14,7 +14,7 @@
   "devDependencies": {
     "@delgada/cli": "^0.2.2",
     "onchange": "^7.1.0",
-    "prettier": "^2.4.1",
+    "prettier": "^2.5.1",
     "serve": "^13.0.2"
   }
 }
