@@ -27,6 +27,7 @@
     box-shadow: 0 2px 8px #ddd;
     border: 1px solid #ccc;
     padding: 1rem;
+    overflow-x: scroll;
   }
 
   button {
@@ -35,8 +36,19 @@
     margin-right: 1rem;
     background-color: rgb(249, 249, 249);
     border: solid 1px #ccc;
-    padding: 0.5rem 1rem;
+    padding: 9px 10px;
     border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 767px) {
+    #menu {
+      width: 80%;
+    }
+
+    button {
+      padding: 11px 10px;
+    }
   }
 
   button:nth-last-child(1) {
