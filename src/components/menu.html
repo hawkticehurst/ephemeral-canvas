@@ -1,0 +1,77 @@
+<section id="menu">
+  <div class="color-picker">
+    <label for="bg-color">Background:</label>
+    <input type="color" id="bg-color" name="bg-color" value="#ffffff" />
+  </div>
+  <div class="color-picker">
+    <label for="pen-color">Pen:</label>
+    <div class="slider-container">
+      <input
+        type="range"
+        min="1"
+        max="100"
+        value="50"
+        class="slider"
+        id="pen-size"
+      />
+    </div>
+    <input type="color" id="pen-color" name="pen-color" value="#1e1e1e" />
+  </div>
+  <button id="clear-canvas">Clear canvas</button>
+</section>
+
+<style>
+  #menu {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    bottom: 20px;
+    background-color: rgb(249, 249, 249);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px #ddd;
+    border: 1px solid #ccc;
+    padding: 1rem;
+  }
+
+  button {
+    font-family: inherit;
+    font-size: inherit;
+    margin-right: 1rem;
+    background-color: rgb(249, 249, 249);
+    border: solid 1px #ccc;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+  }
+
+  button:nth-last-child(1) {
+    margin-right: 0;
+  }
+
+  button:hover {
+    cursor: pointer;
+  }
+
+  .color-picker {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 0.5rem 1rem;
+  }
+
+  .color-picker,
+  .slider-container {
+    display: flex;
+    align-items: center;
+    margin-right: 1rem;
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  .color-picker > label {
+    margin-right: 1rem;
+    font-weight: bold;
+  }
+
+  .color-picker > input:hover {
+    cursor: pointer;
+  }
+</style>

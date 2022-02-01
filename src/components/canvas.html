@@ -1,0 +1,65 @@
+<script>
+  const [canvas, ctx] = initCanvas();
+
+  canvas.style.cursor = 'crosshair';
+
+  canvas.addEventListener('mousedown', (e) => {
+    canvas.onmousemove = (e) => {
+      drawPenSegment(e, canvas, ctx);
+    };
+  });
+  canvas.addEventListener('mouseup', (e) => {
+    canvas.onmousemove = null;
+  });
+
+  const bgColorPicker = document.getElementById('bg-color');
+  bgColorPicker.addEventListener('change', (e) => {
+    const color = e.target.value;
+    createCanvasBackground(canvas, ctx, color);
+  });
+
+  const clearCanvasButton = document.getElementById('clear-canvas');
+  clearCanvasButton.addEventListener('click', function () {
+    clearCanvas(canvas, ctx);
+  });
+
+  function initCanvas() {
+    const canvas = document.getElementById('artboard');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    createCanvasBackground(canvas, ctx);
+
+    return [canvas, ctx];
+  }
+
+  function createCanvasBackground(canvas, ctx, color = '#ffffff') {
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function drawPenSegment(e, canvas, ctx) {
+    const x = e.clientX;
+    const y = e.clientY;
+    const color = document.getElementById('pen-color').value;
+    const penSize = document.getElementById('pen-size').value;
+    drawColoredCircle(canvas, ctx, x, y, color, penSize);
+  }
+
+  function drawColoredCircle(canvas, ctx, x, y, color, penSize) {
+    ctx.beginPath();
+    ctx.arc(x, y, penSize, 0, 2 * Math.PI);
+    ctx.fillStyle = color;
+    ctx.fill();
+    return canvas;
+  }
+
+  function clearCanvas(canvas, ctx) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    createCanvasBackground(canvas, ctx);
+  }
+</script>
+
+<canvas id="artboard"></canvas>
