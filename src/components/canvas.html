@@ -1,64 +1,99 @@
 <script>
-  const [canvas, ctx] = initCanvas();
+  const canvas = document.getElementById('artboard');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 
-  canvas.style.cursor = 'crosshair';
+  setCanvasConfigs();
+  initDrawListeners();
+  initMenuListeners();
 
-  canvas.addEventListener('mousedown', (e) => {
-    canvas.onmousemove = (e) => {
-      drawPenSegment(e, canvas, ctx);
+  const drawingHistory = [];
+  redrawCanvas(canvas, ctx);
+
+  // --- Helper functions ---
+
+  function setCanvasConfigs() {
+    // Disable default context menu
+    document.oncontextmenu = function () {
+      return false;
     };
-  });
-  canvas.addEventListener('mouseup', (e) => {
-    canvas.onmousemove = null;
-  });
 
-  const bgColorPicker = document.getElementById('bg-color');
-  bgColorPicker.addEventListener('change', (e) => {
-    const color = e.target.value;
-    createCanvasBackground(canvas, ctx, color);
-  });
-
-  const clearCanvasButton = document.getElementById('clear-canvas');
-  clearCanvasButton.addEventListener('click', function () {
-    clearCanvas(canvas, ctx);
-  });
-
-  function initCanvas() {
-    const canvas = document.getElementById('artboard');
-    const ctx = canvas.getContext('2d');
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    createCanvasBackground(canvas, ctx);
-
-    return [canvas, ctx];
+    // Redraw canvas on resize
+    window.addEventListener('resize', (event) => {
+      redrawCanvas(canvas, ctx);
+    });
   }
 
-  function createCanvasBackground(canvas, ctx, color = '#ffffff') {
-    ctx.fillStyle = color;
+  function initDrawListeners() {
+    canvas.style.cursor = 'crosshair';
+    canvas.addEventListener('mousedown', (e) => {
+      drawLineSegment(e, canvas, ctx);
+      canvas.onmousemove = (e) => {
+        drawLineSegment(e, canvas, ctx);
+      };
+    });
+    canvas.addEventListener('mouseup', (e) => {
+      canvas.onmousemove = null;
+    });
+  }
+
+  function initMenuListeners() {
+    // Set clear canvas button listener
+    const clearCanvasButton = document.getElementById('clear-canvas');
+    clearCanvasButton.addEventListener('click', function () {
+      clearCanvas(canvas, ctx);
+    });
+  }
+
+  function redrawCanvas(canvas, ctx) {
+    canvas.width = document.body.clientWidth;
+    canvas.height = document.body.clientHeight;
+
+    ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Generate grid of dots on canvas
+    for (let i = 0; i < canvas.width; i += 20) {
+      for (let j = 0; j < canvas.height; j += 20) {
+        ctx.fillStyle = '#1e1e1e';
+        ctx.fillRect(i, j, 1, 1);
+      }
+    }
+
+    // Redraw all strokes
+    for (let i = 0; i < drawingHistory.length; i++) {
+      const line = drawingHistory[i];
+      drawCircle(line.x, line.y, line.color, line.penSize);
+    }
   }
 
-  function drawPenSegment(e, canvas, ctx) {
+  function drawLineSegment(e, canvas, ctx) {
     const x = e.clientX;
     const y = e.clientY;
     const color = document.getElementById('pen-color').value;
     const penSize = document.getElementById('pen-size').value;
-    drawColoredCircle(canvas, ctx, x, y, color, penSize);
+    // Add to drawing history
+    drawingHistory.push({
+      x,
+      y,
+      color,
+      penSize,
+    });
+    // Draw line segment
+    drawCircle(canvas, ctx, x, y, color, penSize);
   }
 
-  function drawColoredCircle(canvas, ctx, x, y, color, penSize) {
+  function drawCircle(canvas, ctx, x, y, color, penSize) {
     ctx.beginPath();
     ctx.arc(x, y, penSize, 0, 2 * Math.PI);
     ctx.fillStyle = color;
     ctx.fill();
-    return canvas;
   }
 
   function clearCanvas(canvas, ctx) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    createCanvasBackground(canvas, ctx);
+    redrawCanvas(canvas, ctx);
   }
 </script>
 
