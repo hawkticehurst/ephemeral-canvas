@@ -14,7 +14,7 @@
   initDrawListeners(canvas, ctx);
   initMenuListeners(canvas, ctx);
   initKeyboardListeners(canvas, ctx);
-  
+
   redrawCanvas(canvas, ctx);
 
   // --- Helper functions ---
@@ -50,7 +50,6 @@
 
     // touch events
     canvas.addEventListener('touchstart', (e) => {
-      console.log('touchstart');
       if (e.touches.length == 1) {
         singleTouch = true;
         multiTouch = false;
