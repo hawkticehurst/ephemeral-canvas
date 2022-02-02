@@ -1,8 +1,8 @@
 # Ephemeral Canvas
 
-A basic drawing app implementation using [Delgada](https://delgada.dev) and 2D canvas graphics.
+A minimal drawing app with no save. Built using [Delgada](https://delgada.dev) and canvas graphics.
 
-![Delgada canvas application screenshot](./assets/delgada-canvas.png)
+![Ephemeral canvas application screenshot](./assets/delgada-canvas.png)
 
 ## Usage
 
