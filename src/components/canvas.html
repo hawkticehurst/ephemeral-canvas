@@ -46,9 +46,21 @@
 
   function initMenuListeners(canvas, ctx) {
     // Set clear canvas button listener
-    const clearCanvasButton = document.getElementById('clear-canvas');
+    const clearCanvasButton = document.getElementById('clear-canvas-button');
     clearCanvasButton.addEventListener('click', function () {
       clearCanvas(canvas, ctx);
+    });
+
+    // Set undo button listener
+    const undoButton = document.getElementById('undo-button');
+    undoButton.addEventListener('click', function () {
+      undoDrawing(canvas, ctx);
+    });
+
+    // Set redo button listener
+    const redoButton = document.getElementById('redo-button');
+    redoButton.addEventListener('click', function () {
+      redoDrawing(canvas, ctx);
     });
   }
 
@@ -56,21 +68,27 @@
     window.addEventListener('keydown', function (e) {
       e.stopImmediatePropagation();
       if (e.key === 'z' && (e.ctrlKey || e.metaKey) && e.shiftKey) {
-        // redo
-        const line = discardedDrawingHistory.pop();
-        if (line) {
-          drawingHistory.push(line);
-          redrawCanvas(canvas, ctx);
-        }
+        redoDrawing(canvas, ctx);
       } else if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
-        // undo
-        const line = drawingHistory.pop();
-        if (line) {
-          discardedDrawingHistory.push(line);
-          redrawCanvas(canvas, ctx);
-        }
+        undoDrawing(canvas, ctx);
       }
     });
+  }
+
+  function redoDrawing(canvas, ctx) {
+    const line = discardedDrawingHistory.pop();
+    if (line) {
+      drawingHistory.push(line);
+      redrawCanvas(canvas, ctx);
+    }
+  }
+
+  function undoDrawing(canvas, ctx) {
+    const line = drawingHistory.pop();
+    if (line) {
+      discardedDrawingHistory.push(line);
+      redrawCanvas(canvas, ctx);
+    }
   }
 
   function redrawCanvas(canvas, ctx) {

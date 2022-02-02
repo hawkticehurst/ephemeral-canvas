@@ -1,19 +1,26 @@
+<!-- 
+  import './slider.html'
+  import './color-picker.html'
+  import './icons/redo-icon.html'
+  import './icons/undo-icon.html'
+  import './icons/trash-icon.html'
+ -->
+
 <section id="menu">
   <div class="color-picker">
     <label for="pen-color">Pen:</label>
-    <div class="slider-container">
-      <input
-        type="range"
-        min="1"
-        max="100"
-        value="18"
-        class="slider"
-        id="pen-size"
-      />
-    </div>
-    <input type="color" id="pen-color" name="pen-color" value="#1e1e1e" />
+    <slider id="pen-size" min="1" max="100" value="18"></slider>
+    <color-picker id="pen-color" value="#1e1e1e"></color-picker>
   </div>
-  <button id="clear-canvas">Clear canvas</button>
+  <button id="undo-button" class="menu-button">
+    <undo-icon></undo-icon>
+  </button>
+  <button id="redo-button" class="menu-button">
+    <redo-icon></redo-icon>
+  </button>
+  <button id="clear-canvas-button" class="menu-button">
+    <trash-icon></trash-icon>
+  </button>
 </section>
 
 <style>
@@ -27,10 +34,14 @@
     box-shadow: 0 2px 8px #ddd;
     border: 1px solid #ccc;
     padding: 1rem;
-    overflow-x: scroll;
   }
 
-  button {
+  #menu svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .menu-button {
     font-family: inherit;
     font-size: inherit;
     margin-right: 1rem;
@@ -39,23 +50,25 @@
     padding: 9px 10px;
     border-radius: 4px;
     white-space: nowrap;
+    line-height: 0px;
   }
 
   @media (max-width: 767px) {
     #menu {
       width: 80%;
+      overflow-x: scroll;
     }
 
-    button {
+    .menu-button {
       padding: 11px 10px;
     }
   }
 
-  button:nth-last-child(1) {
+  .menu-button:nth-last-child(1) {
     margin-right: 0;
   }
 
-  button:hover {
+  .menu-button:hover {
     cursor: pointer;
     background-color: rgb(235, 233, 233);
   }
@@ -66,8 +79,7 @@
     padding: 0.5rem 1rem;
   }
 
-  .color-picker,
-  .slider-container {
+  .color-picker {
     display: flex;
     align-items: center;
     margin-right: 1rem;
@@ -78,6 +90,10 @@
   .color-picker > label {
     margin-right: 1rem;
     font-weight: bold;
+  }
+
+  #pen-size {
+    margin-right: 1rem;
   }
 
   .color-picker > input:hover {
