@@ -2,7 +2,7 @@
 
 A minimal drawing app with no save. Built using [Delgada](https://delgada.dev) and canvas graphics.
 
-![Ephemeral canvas application screenshot](./assets/delgada-canvas.png)
+![Ephemeral canvas application screenshot](./assets/ephemeral-canvas.png)
 
 ## Usage
 

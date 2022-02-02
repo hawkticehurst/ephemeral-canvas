@@ -1,7 +1,7 @@
 {
-  "name": "delgada-canvas",
+  "name": "ephemeral-canvas",
   "version": "1.0.0",
-  "description": "A basic drawing app implementation using Delgada and 2D canvas graphics.",
+  "description": "A minimal drawing app with no save.",
   "license": "MIT",
   "scripts": {
     "start": "npm run build & npm run serve & npm run watch",
