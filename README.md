@@ -1,4 +1,4 @@
-# Delgada Canvas
+# Ephemeral Canvas
 
 A basic drawing app implementation using [Delgada](https://delgada.dev) and 2D canvas graphics.
 
