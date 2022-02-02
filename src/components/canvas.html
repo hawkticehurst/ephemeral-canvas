@@ -4,16 +4,19 @@
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  setCanvasConfigs();
-  initDrawListeners();
-  initMenuListeners();
+  setCanvasConfigs(canvas, ctx);
+  initDrawListeners(canvas, ctx);
+  initMenuListeners(canvas, ctx);
+  initKeyboardListeners(canvas, ctx);
 
+  let isNewLine = true;
   const drawingHistory = [];
+  const discardedDrawingHistory = [];
   redrawCanvas(canvas, ctx);
 
   // --- Helper functions ---
 
-  function setCanvasConfigs() {
+  function setCanvasConfigs(canvas, ctx) {
     // Disable default context menu
     document.oncontextmenu = function () {
       return false;
@@ -25,24 +28,48 @@
     });
   }
 
-  function initDrawListeners() {
+  function initDrawListeners(canvas, ctx) {
     canvas.style.cursor = 'crosshair';
     canvas.addEventListener('mousedown', (e) => {
       drawLineSegment(e, canvas, ctx);
       canvas.onmousemove = (e) => {
         drawLineSegment(e, canvas, ctx);
       };
+      isNewLine = false;
     });
     canvas.addEventListener('mouseup', (e) => {
+      isNewLine = true;
       canvas.onmousemove = null;
+      discardedDrawingHistory.length = 0;
     });
   }
 
-  function initMenuListeners() {
+  function initMenuListeners(canvas, ctx) {
     // Set clear canvas button listener
     const clearCanvasButton = document.getElementById('clear-canvas');
     clearCanvasButton.addEventListener('click', function () {
       clearCanvas(canvas, ctx);
+    });
+  }
+
+  function initKeyboardListeners(canvas, ctx) {
+    window.addEventListener('keydown', function (e) {
+      e.stopImmediatePropagation();
+      if (e.key === 'z' && (e.ctrlKey || e.metaKey) && e.shiftKey) {
+        // redo
+        const line = discardedDrawingHistory.pop();
+        if (line) {
+          drawingHistory.push(line);
+          redrawCanvas(canvas, ctx);
+        }
+      } else if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
+        // undo
+        const line = drawingHistory.pop();
+        if (line) {
+          discardedDrawingHistory.push(line);
+          redrawCanvas(canvas, ctx);
+        }
+      }
     });
   }
 
@@ -62,9 +89,17 @@
     }
 
     // Redraw all strokes
-    for (let i = 0; i < drawingHistory.length; i++) {
-      const line = drawingHistory[i];
-      drawCircle(line.x, line.y, line.color, line.penSize);
+    for (const line of drawingHistory) {
+      for (let i = 0; i < line.length - 1; i++) {
+        const lineSegment = line[i];
+        drawCircle(
+          ctx,
+          lineSegment.x,
+          lineSegment.y,
+          lineSegment.color,
+          lineSegment.penSize
+        );
+      }
     }
   }
 
@@ -73,18 +108,25 @@
     const y = e.clientY;
     const color = document.getElementById('pen-color').value;
     const penSize = document.getElementById('pen-size').value;
-    // Add to drawing history
-    drawingHistory.push({
+    const lineSegment = {
       x,
       y,
       color,
       penSize,
-    });
+    };
+
+    // Add to drawing history
+    if (isNewLine) {
+      drawingHistory.push([lineSegment]);
+    } else {
+      drawingHistory[drawingHistory.length - 1].push(lineSegment);
+    }
+
     // Draw line segment
-    drawCircle(canvas, ctx, x, y, color, penSize);
+    drawCircle(ctx, x, y, color, penSize);
   }
 
-  function drawCircle(canvas, ctx, x, y, color, penSize) {
+  function drawCircle(ctx, x, y, color, penSize) {
     ctx.beginPath();
     ctx.arc(x, y, penSize, 0, 2 * Math.PI);
     ctx.fillStyle = color;
@@ -92,6 +134,8 @@
   }
 
   function clearCanvas(canvas, ctx) {
+    drawingHistory.length = 0;
+    discardedDrawingHistory.length = 0;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCanvas(canvas, ctx);
   }
