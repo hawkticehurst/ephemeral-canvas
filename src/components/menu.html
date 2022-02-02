@@ -33,7 +33,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 8px #ddd;
     border: 1px solid #ccc;
-    padding: 1rem;
+    padding: 1rem 0 1rem 1rem;
   }
 
   #menu svg {
@@ -55,17 +55,14 @@
 
   @media (max-width: 767px) {
     #menu {
-      width: 80%;
+      width: fit-content;
+      max-width: 80%;
       overflow-x: scroll;
     }
 
     .menu-button {
       padding: 11px 10px;
     }
-  }
-
-  .menu-button:nth-last-child(1) {
-    margin-right: 0;
   }
 
   .menu-button:hover {
