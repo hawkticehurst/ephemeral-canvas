@@ -4,16 +4,17 @@
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  setCanvasConfigs(canvas, ctx);
-  initDrawListeners(canvas, ctx);
-  initMenuListeners(canvas, ctx);
-  initKeyboardListeners(canvas, ctx);
-
   let singleTouch = false;
   let multiTouch = false;
   let isNewLine = true;
   const drawingHistory = [];
   const redoDrawingHistory = [];
+
+  setCanvasConfigs(canvas, ctx);
+  initDrawListeners(canvas, ctx);
+  initMenuListeners(canvas, ctx);
+  initKeyboardListeners(canvas, ctx);
+  
   redrawCanvas(canvas, ctx);
 
   // --- Helper functions ---
@@ -67,14 +68,14 @@
       }
       isNewLine = false;
     });
-    canvas.addEventListener('touchend', handleTouchEnd);
-    canvas.addEventListener('touchcancel', handleTouchEnd);
 
     const handleTouchEnd = () => {
       singleTouch = false;
       multiTouch = false;
       isNewLine = true;
     };
+    canvas.addEventListener('touchend', handleTouchEnd);
+    canvas.addEventListener('touchcancel', handleTouchEnd);
   }
 
   function initMenuListeners(canvas, ctx) {
