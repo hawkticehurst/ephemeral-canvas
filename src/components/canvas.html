@@ -9,9 +9,11 @@
   initMenuListeners(canvas, ctx);
   initKeyboardListeners(canvas, ctx);
 
+  let singleTouch = false;
+  let multiTouch = false;
   let isNewLine = true;
   const drawingHistory = [];
-  const discardedDrawingHistory = [];
+  const redoDrawingHistory = [];
   redrawCanvas(canvas, ctx);
 
   // --- Helper functions ---
@@ -30,6 +32,8 @@
 
   function initDrawListeners(canvas, ctx) {
     canvas.style.cursor = 'crosshair';
+
+    // mouse events
     canvas.addEventListener('mousedown', (e) => {
       drawLineSegment(e, canvas, ctx);
       canvas.onmousemove = (e) => {
@@ -40,8 +44,37 @@
     canvas.addEventListener('mouseup', (e) => {
       isNewLine = true;
       canvas.onmousemove = null;
-      discardedDrawingHistory.length = 0;
+      redoDrawingHistory.length = 0;
     });
+
+    // touch events
+    canvas.addEventListener('touchstart', (e) => {
+      console.log('touchstart');
+      if (e.touches.length == 1) {
+        singleTouch = true;
+        multiTouch = false;
+      }
+      if (e.touches.length >= 2) {
+        singleTouch = false;
+        multiTouch = true;
+      }
+    });
+    canvas.addEventListener('touchmove', (e) => {
+      if (singleTouch) {
+        drawLineSegment(e, canvas, ctx, true);
+      } else {
+        // do nothing when multi-touch
+      }
+      isNewLine = false;
+    });
+    canvas.addEventListener('touchend', handleTouchEnd);
+    canvas.addEventListener('touchcancel', handleTouchEnd);
+
+    const handleTouchEnd = () => {
+      singleTouch = false;
+      multiTouch = false;
+      isNewLine = true;
+    };
   }
 
   function initMenuListeners(canvas, ctx) {
@@ -76,7 +109,7 @@
   }
 
   function redoDrawing(canvas, ctx) {
-    const line = discardedDrawingHistory.pop();
+    const line = redoDrawingHistory.pop();
     if (line) {
       drawingHistory.push(line);
       redrawCanvas(canvas, ctx);
@@ -86,7 +119,7 @@
   function undoDrawing(canvas, ctx) {
     const line = drawingHistory.pop();
     if (line) {
-      discardedDrawingHistory.push(line);
+      redoDrawingHistory.push(line);
       redrawCanvas(canvas, ctx);
     }
   }
@@ -121,9 +154,9 @@
     }
   }
 
-  function drawLineSegment(e, canvas, ctx) {
-    const x = e.clientX;
-    const y = e.clientY;
+  function drawLineSegment(e, canvas, ctx, isTouch = false) {
+    const x = isTouch ? e.touches[0].pageX : e.clientX;
+    const y = isTouch ? e.touches[0].pageY : e.clientY;
     const color = document.getElementById('pen-color').value;
     const penSize = document.getElementById('pen-size').value;
     const lineSegment = {
@@ -153,7 +186,7 @@
 
   function clearCanvas(canvas, ctx) {
     drawingHistory.length = 0;
-    discardedDrawingHistory.length = 0;
+    redoDrawingHistory.length = 0;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCanvas(canvas, ctx);
   }
