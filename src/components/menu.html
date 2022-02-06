@@ -18,7 +18,6 @@
   window.addEventListener('keydown', function (e) {
     if (e.key === 'm') {
       toggleMenu();
-      toggleShowMenuButton();
     } else if (e.key === 'p') {
       togglePencilOptions();
     } else if (e.key === 'c') {
@@ -29,13 +28,11 @@
   const showMenuButton = document.getElementById('show-menu-button');
   showMenuButton.addEventListener('click', function () {
     toggleMenu();
-    toggleShowMenuButton();
   });
 
   const hideMenuButton = document.getElementById('hide-menu-button');
   hideMenuButton.addEventListener('click', function () {
     toggleMenu();
-    toggleShowMenuButton();
   });
 
   const pencilButton = document.getElementById('pencil-button');
@@ -58,6 +55,7 @@
         : 'translateY(110px)';
       isMenuOpen = false;
     }
+    toggleShowMenuButton();
   }
 
   function toggleShowMenuButton() {
