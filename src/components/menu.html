@@ -1,42 +1,160 @@
 <!-- 
   import './slider.html'
   import './color-picker.html'
+  import './icons/arrow-down-icon.html'
+  import './icons/arrow-up-icon.html'
+  import './icons/pencil-icon.html'
+  import './icons/leaf-icon.html'
   import './icons/redo-icon.html'
   import './icons/undo-icon.html'
   import './icons/trash-icon.html'
  -->
 
-<section id="menu">
-  <div class="color-picker">
-    <label for="pen-color">Pen:</label>
-    <slider id="pen-size" min="1" max="100" value="18"></slider>
-    <color-picker id="pen-color" value="#1e1e1e"></color-picker>
+<script>
+  let isMenuOpen = true;
+  let isPencilOptionsOpen = false;
+  let isColorPickerOpen = false;
+
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'm') {
+      toggleMenu();
+      toggleShowMenuButton();
+    } else if (e.key === 'p') {
+      togglePencilOptions();
+    } else if (e.key === 'c') {
+      toggleColorPicker();
+    }
+  });
+
+  const showMenuButton = document.getElementById('show-menu-button');
+  showMenuButton.addEventListener('click', function () {
+    toggleMenu();
+    toggleShowMenuButton();
+  });
+
+  const hideMenuButton = document.getElementById('hide-menu-button');
+  hideMenuButton.addEventListener('click', function () {
+    toggleMenu();
+    toggleShowMenuButton();
+  });
+
+  const pencilButton = document.getElementById('pencil-button');
+  pencilButton.addEventListener('click', () => {
+    togglePencilOptions();
+  });
+
+  function toggleMenu() {
+    const menu = document.getElementById('menu-container');
+    const pencilOptions = document.getElementById('pencil-options');
+    if (
+      menu.style.transform === 'translateY(110px)' ||
+      menu.style.transform === 'translateY(170px)'
+    ) {
+      menu.style.transform = 'translateY(0px)';
+      isMenuOpen = true;
+    } else {
+      menu.style.transform = isPencilOptionsOpen
+        ? 'translateY(170px)'
+        : 'translateY(110px)';
+      isMenuOpen = false;
+    }
+  }
+
+  function toggleShowMenuButton() {
+    const showMenuButton = document.getElementById('show-menu-button');
+    if (!isMenuOpen) {
+      showMenuButton.style.transform = 'translateY(-70px)';
+    } else {
+      showMenuButton.style.transform = 'translateY(0px)';
+    }
+  }
+
+  function togglePencilOptions() {
+    const pencilOptions = document.getElementById('pencil-options');
+    if (!isPencilOptionsOpen) {
+      if (!isMenuOpen) {
+        toggleMenu();
+      }
+      pencilOptions.style.display = 'flex';
+      pencilButton.classList.add('selected-menu-button');
+      isPencilOptionsOpen = true;
+    } else {
+      pencilOptions.style.display = 'none';
+      pencilButton.classList.remove('selected-menu-button');
+      isPencilOptionsOpen = false;
+    }
+  }
+
+  // Todo: Figure out how to close color picker programmatically
+  function toggleColorPicker() {
+    const pencilButton = document.getElementById('pencil-button');
+    const pencilColor = document.getElementById('pencil-color');
+    if (!isMenuOpen) {
+      toggleMenu();
+    }
+    if (!isPencilOptionsOpen) {
+      pencilButton.click();
+    }
+    pencilColor.focus();
+    pencilColor.click();
+  }
+</script>
+
+<section id="menu-container">
+  <div id="pencil-options">
+    <slider id="pencil-size" min="1" max="100" value="20"></slider>
+    <color-picker id="pencil-color" value="#ebe9e9"></color-picker>
   </div>
-  <button id="undo-button" class="menu-button">
-    <undo-icon></undo-icon>
-  </button>
-  <button id="redo-button" class="menu-button">
-    <redo-icon></redo-icon>
-  </button>
-  <button id="clear-canvas-button" class="menu-button">
-    <trash-icon></trash-icon>
-  </button>
+  <section id="menu-controls">
+    <button id="hide-menu-button" class="menu-button">
+      <arrow-down-icon></arrow-down-icon>
+    </button>
+    <button id="pencil-button" class="menu-button">
+      <pencil-icon></pencil-icon>
+    </button>
+    <button id="undo-button" class="menu-button">
+      <undo-icon></undo-icon>
+    </button>
+    <button id="redo-button" class="menu-button">
+      <redo-icon></redo-icon>
+    </button>
+    <button id="clear-canvas-button" class="menu-button">
+      <leaf-icon></leaf-icon>
+    </button>
+  </section>
 </section>
+<button id="show-menu-button" class="menu-button">
+  <arrow-up-icon></arrow-up-icon>
+</button>
 
 <style>
-  #menu {
+  #menu-container {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     position: fixed;
     bottom: 20px;
-    background-color: rgb(249, 249, 249);
+    background-color: var(--background);
     border-radius: 8px;
-    box-shadow: 0 2px 8px #ddd;
-    border: 1px solid #ccc;
-    padding: 1rem 0 1rem 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border);
+    padding: 1rem;
+    transform: translateY(0);
+    transition: transform 0.2s linear;
   }
 
-  #menu svg {
+  #menu-controls {
+    display: flex;
+    align-items: center;
+    background-color: var(--background);
+    transform: translateY(0);
+    transition: transform 0.2s linear;
+  }
+
+  #menu-controls svg,
+  #show-menu-button svg {
+    color: var(--foreground);
     width: 24px;
     height: 24px;
   }
@@ -46,8 +164,8 @@
     font-family: inherit;
     font-size: inherit;
     margin-right: 1rem;
-    background-color: rgb(249, 249, 249);
-    border: solid 1px #ccc;
+    background-color: var(--background);
+    border: solid 1px var(--border);
     padding: 9px 10px;
     border-radius: 4px;
     white-space: nowrap;
@@ -66,35 +184,59 @@
     }
   }
 
+  .menu-button:nth-last-child(1) {
+    margin-right: 0;
+  }
+
   .menu-button:hover {
     cursor: pointer;
-    background-color: rgb(235, 233, 233);
+    background-color: var(--hover-background);
   }
 
-  .color-picker {
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    padding: 0.5rem 1rem;
+  .selected-menu-button {
+    border-color: rgb(58, 90, 235);
   }
 
-  .color-picker {
-    display: flex;
+  #pencil-options {
+    display: none;
     align-items: center;
-    margin-right: 1rem;
+    justify-content: center;
     font-family: inherit;
     font-size: inherit;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
   }
 
-  .color-picker > label {
+  #pencil-size {
     margin-right: 1rem;
-    font-weight: bold;
   }
 
-  #pen-size {
-    margin-right: 1rem;
-  }
-
-  .color-picker > input:hover {
+  #pencil-options > input:hover {
     cursor: pointer;
+  }
+
+  #clear-canvas-button {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    height: 44px;
+    color: white;
+    background-image: radial-gradient(
+      circle farthest-corner at 10% 20%,
+      rgba(14, 174, 87, 1) 0%,
+      rgba(12, 116, 117, 1) 90%
+    );
+  }
+
+  #show-menu-button {
+    position: fixed;
+    bottom: -50px;
+    margin-right: 0;
+    transform: translateY(0px);
+    transition: transform 0.2s linear;
+    z-index: 0;
   }
 </style>
