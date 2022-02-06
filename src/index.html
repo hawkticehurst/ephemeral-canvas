@@ -6,15 +6,48 @@
 <html lang="en">
   <head>
     <title>Ephemeral Canvas</title>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="title" content="Ephemeral Canvas" />
+    <meta name="description" content="A minimal drawing app with no save." />
     <meta
       name="viewport"
       content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1"
     />
+    <link rel="shortcut icon" href="./assets/favicon.png" type="image/x-icon" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta charset="UTF-8" />
+
+    <!-- Open graph meta tags -->
+    <meta property="og:title" content="Ephemeral Canvas" />
+    <meta
+      property="og:description"
+      content="A minimal drawing app with no save."
+    />
+    <meta property="og:url" content="https://ephemeral-canvas.vercel.app/" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:image"
+      content="https://ephemeral-canvas.vercel.app/assets/seo-og.jpg"
+    />
+
+    <!-- Twitter meta tags -->
+    <meta property="twitter:title" content="Ephemeral Canvas" />
+    <meta
+      property="twitter:description"
+      content="A minimal drawing app with no save."
+    />
+    <meta
+      property="twitter:url"
+      content="https://ephemeral-canvas.vercel.app/"
+    />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta
+      property="twitter:image"
+      content="https://ephemeral-canvas.vercel.app/assets/seo-twitter.jpg"
+    />
+
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Lora:wght@300&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -24,12 +57,29 @@
 </html>
 
 <style>
+  :root {
+    --background: var(--dark-background);
+    --foreground: var(--dark-foreground);
+    --border: var(--dark-border);
+    --hover-background: var(--dark-hover-background);
+
+    --dark-background: #1e1e1e;
+    --dark-foreground: #f9f9f9;
+    --dark-border: #464646;
+    --dark-hover-background: #2a2a2a;
+
+    --light-background: #f9f9f9;
+    --light-foreground: #1e1e1e;
+    --light-border: #cccccc;
+    --light-hover-background: #ebe9e9;
+  }
+
   body {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 500;
     font-size: 1.2rem;
-    color: rgb(30, 30, 33);
-    background-color: white;
+    color: var(--foreground);
+    background-color: var(--background);
     margin: 0;
     padding: 0;
     overflow: hidden;
