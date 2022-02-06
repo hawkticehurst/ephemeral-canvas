@@ -104,6 +104,12 @@
         redoDrawing(canvas, ctx);
       } else if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
         undoDrawing(canvas, ctx);
+      } else if (e.key === ']') {
+        increaseBrushSize();
+      } else if (e.key === '[') {
+        decreaseBrushSize();
+      } else if (e.key === 'x' && (e.ctrlKey || e.metaKey)) {
+        clearCanvas(canvas, ctx);
       }
     });
   }
@@ -128,13 +134,13 @@
     canvas.width = document.body.clientWidth;
     canvas.height = document.body.clientHeight;
 
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = '#1e1e1e';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Generate grid of dots on canvas
     for (let i = 0; i < canvas.width; i += 20) {
       for (let j = 0; j < canvas.height; j += 20) {
-        ctx.fillStyle = '#1e1e1e';
+        ctx.fillStyle = '#f9f9f9';
         ctx.fillRect(i, j, 1, 1);
       }
     }
@@ -148,7 +154,7 @@
           lineSegment.x,
           lineSegment.y,
           lineSegment.color,
-          lineSegment.penSize
+          lineSegment.pencilSize
         );
       }
     }
@@ -157,13 +163,13 @@
   function drawLineSegment(e, canvas, ctx, isTouch = false) {
     const x = isTouch ? e.touches[0].pageX : e.clientX;
     const y = isTouch ? e.touches[0].pageY : e.clientY;
-    const color = document.getElementById('pen-color').value;
-    const penSize = document.getElementById('pen-size').value;
+    const color = document.getElementById('pencil-color').value;
+    const pencilSize = document.getElementById('pencil-size').value;
     const lineSegment = {
       x,
       y,
       color,
-      penSize,
+      pencilSize,
     };
 
     // Add to drawing history
@@ -174,12 +180,12 @@
     }
 
     // Draw line segment
-    drawCircle(ctx, x, y, color, penSize);
+    drawCircle(ctx, x, y, color, pencilSize);
   }
 
-  function drawCircle(ctx, x, y, color, penSize) {
+  function drawCircle(ctx, x, y, color, pencilSize) {
     ctx.beginPath();
-    ctx.arc(x, y, penSize, 0, 2 * Math.PI);
+    ctx.arc(x, y, pencilSize, 0, 2 * Math.PI);
     ctx.fillStyle = color;
     ctx.fill();
   }
@@ -189,6 +195,18 @@
     redoDrawingHistory.length = 0;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     redrawCanvas(canvas, ctx);
+  }
+
+  function increaseBrushSize() {
+    const pencilSize = document.getElementById('pencil-size');
+    const newSize = parseInt(pencilSize.value, 10) + 5;
+    pencilSize.value = newSize;
+  }
+
+  function decreaseBrushSize() {
+    const pencilSize = document.getElementById('pencil-size');
+    const newSize = parseInt(pencilSize.value, 10) - 5;
+    pencilSize.value = newSize;
   }
 </script>
 
